@@ -18,6 +18,9 @@ class Snowbuddy(commands.Bot):
                               ]
     self.path = os.path.dirname(os.path.realpath(__file__))
  
+  async def start_db(self):
+    self.db=await asyncpg.create_pool(dsn=config.dsn)
+
   async def on_ready(self):
     try:
       await self.start_db()
