@@ -21,7 +21,7 @@ class Dex(commands.Cog, name="Dex"):
   @commands.command(name="dex")
   async def dex(self,ctx,*pokemon):
     pkmnfile='_'.join(pokemon)
-    pokedex=requests.get(f"https://github.com/jalyna/oakdex-pokedex/blob/master/data/pokemon/{pkmnfile}.json")
+    pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/blob/master/data/pokemon/{pkmnfile}.json")
     json=pokedex.content
     print(json)
     
