@@ -2,7 +2,7 @@ import discord, asyncio, random, os, asyncpg, include, time
 from discord.ext import commands
 from datetime import datetime
 
-config=include.path('/root/snowbuddy/config/config.py')
+config=include.path('/root/botdito-py/config/config.py')
 
 class Snowbuddy(commands.Bot):
   def __init__(self):
