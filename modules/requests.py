@@ -29,7 +29,7 @@ class Requests(commands.Cog, name='Requests'):
     await ctx.send("Set your fc! Now you can request Pokemon!")
     
   @fc.command()
-  async def view(self,ctx,console=None,user:discord.User=None)
+  async def view(self,ctx,console=None,user:discord.User=None):
     validconsoles=['3ds','switch']
     if not user:
       user=ctx.author
