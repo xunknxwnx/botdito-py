@@ -47,6 +47,7 @@ class Requests(commands.Cog, name='Requests'):
         consolea='ds'
       else:
         consolea=console
+      await ctx.send(consolea)
       if not friendcode[consolea.lower()]:
         return await ctx.send(f"This user doesn't have an FC set for the {console}!")
       embed=discord.Embed(description=friendcode[consolea.lower()],colour=discord.Colour.blue())
