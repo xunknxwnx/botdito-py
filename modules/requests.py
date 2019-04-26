@@ -13,6 +13,7 @@ class Requests(commands.Cog, name='Requests'):
   @fc.command()
   async def set(self,ctx,console=None,*,fc=None):
     validconsoles=['3ds','switch']
+    consolea=None
     if not console:
       return await ctx.send("You need to provide a console for your friend code!")
     if console.lower() not in validconsoles:
@@ -24,13 +25,16 @@ class Requests(commands.Cog, name='Requests'):
     channel=discord.utils.get(ctx.guild.channels,name='friend-safari')
     await channel.send(embed=embed)
     if console.lower()=='3ds':
-      console='ds'
-    await self.bot.db.execute(f"UPDATE people SET {console.lower()}={fc} WHERE user_id={ctx.author.id}")
+      consolea='ds'
+    else:
+      consolea=console
+    await self.bot.db.execute(f"UPDATE people SET {consolea.lower()}={fc} WHERE user_id={ctx.author.id}")
     await ctx.send("Set your fc! Now you can request Pokemon!")
     
   @fc.command()
   async def view(self,ctx,console=None,user:discord.User=None):
     validconsoles=['3ds','switch']
+    consolea=None
     if not user:
       user=ctx.author
     if not console:
@@ -40,12 +44,12 @@ class Requests(commands.Cog, name='Requests'):
     async with self.bot.db.acquire() as db:
       friendcode=await db.fetchrow(f"SELECT * FROM people WHERE user_id={user.id}")
       if console.lower()=='3ds':
-        console='ds'      
-      if not friendcode[console.lower()]:
-        if console.lower()=='ds':
-          console=='3ds'
+        consolea='ds'
+      else:
+        consolea=console
+      if not friendcode[consolea.lower()]:
         return await ctx.send(f"This user doesn't have an FC set for the {console}!")
-      embed=discord.Embed(description=friendcode[console.lower()],colour=discord.Colour.blue())
+      embed=discord.Embed(description=friendcode[consolea.lower()],colour=discord.Colour.blue())
       embed.set_author(name=user.name,icon_url=user.avatar_url)
       await ctx.send(embed=embed)
       await self.bot.db.release(db)
@@ -53,6 +57,7 @@ class Requests(commands.Cog, name='Requests'):
   @fc.command()
   async def delete(self,ctx,console=None):
     validconsoles=['3ds','switch']
+    consolea=None
     if not console:
       return await ctx.send("You need to provide a console to delete your FC for!") 
     if console.lower() not in validconsoles:
@@ -60,10 +65,12 @@ class Requests(commands.Cog, name='Requests'):
     async with self.bot.db.acquire() as db:
       friendcode=await db.fetchrow(f"SELECT * FROM people WHERE user_id={ctx.author.id}")
       if console.lower()=='3ds':
-        console='ds'      
-      if not friendcode[console.lower()]:
+        consolea='ds'
+      else:
+        consolea=console
+      if not friendcode[consolea.lower()]:
         return await ctx.send("You don't have an FC set for that console!")
-      await db.execute(f"UPDATE people SET {console.lower()}='' WHERE user_id={ctx.author.id}")
+      await db.execute(f"UPDATE people SET {consolea.lower()}='' WHERE user_id={ctx.author.id}")
       await ctx.send("Deleted the FC!")
       await self.bot.db.release(db)
       
