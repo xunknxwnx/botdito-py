@@ -23,7 +23,7 @@ class Dex(commands.Cog, name="Dex"):
     pkmnfile='_'.join(pokemon)
     pokedex=requests.get(f"https://github.com/jalyna/oakdex-pokedex/blob/master/data/pokemon/{pkmnfile}.json")
     json=pokedex.json()
-    await ctx.send(json)
+    print(json)
     
 def setup(bot):
   bot.add_cog(Dex(bot))
