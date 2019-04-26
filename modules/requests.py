@@ -5,6 +5,10 @@ class Requests(commands.Cog, name='Requests'):
   def __init__(self,bot):
     self.bot=bot
     
+  def chunk(self,l,size):
+    for i in range(0,len(l),size):
+      yield l[i:i+size]
+    
   @commands.group(name="friendcode",aliases=['fc'])
   async def fc(self,ctx):
     if ctx.invoked_subcommand==None:
@@ -73,6 +77,41 @@ class Requests(commands.Cog, name='Requests'):
       await db.execute(f"UPDATE people SET {consolea.lower()}='' WHERE user_id={ctx.author.id}")
       await ctx.send("Deleted the FC!")
       await self.bot.db.release(db)
+      
+  @fc.command()
+  async def search(self,ctx,console=None,*,username=None):
+    validconsoles=['3ds','switch']
+    consolea=None
+    if not username:
+      return await ctx.send("You need to provide a username to search for!")
+    if not console:
+      return await ctx.send("You need to provide a console to view a friend code!")
+    if console.lower() not in validconsoles:
+      return await ctx.send("Invalid console. This command is used by doing ``+fc search <console> <username>``. Valid consoles are ``3ds`` and ``switch``. Please try again.")
+    members=[i for i in ctx.guild.members if username in i.name]
+    if not members:
+      return await ctx.send("No users found.")
+      async with self.bot.db.acquire() as db:
+        if console.lower()=='3ds':
+          consolea='ds'
+        else:
+          consolea=console
+        people=[]
+        for i in members:
+          friendcode=await db.fetchrow(f"SELECT {consolea.lower()} FROM people WHERE user_id={i.id}")
+          if friendcode[consolea.lower()]:
+            people.append(i)
+        final=self.chunk(people, 10)
+        text=""
+        index=1
+        for i in final:
+          text+=f"{index} - {i.name}\n"
+          index+=1
+        embed=discord.Embed(description=text, colour=discord.Colour().blue)
+        thing=await ctx.send(embed=embed)
+        e=True
+        
+       
       
 def setup(bot):
   bot.add_cog(Requests(bot))
