@@ -227,8 +227,13 @@ class Dex(commands.Cog, name="Dex"):
     if shiny==True:
       optiongif='-shiny'
     m=''
-    if mega==True:
-      m='-mega'
+    if mega:
+      if x:
+        m='-megax'
+      if y:
+        m='-megay'
+      if not x and not y:
+        m='-mega'
     thumbnail=f"https://play.pokemonshowdown.com/sprites/xyani{optiongif}/{pkmngif.lower()}{m}.gif"
     description=f"""
 Abilities: 
