@@ -103,7 +103,7 @@ class Dex(commands.Cog, name="Dex"):
     steps=[' to '.join(str(i)) for i in jsona['hatch_time']]
     national=jsona['national_id']
     if jsona['gender_ratios']:
-      dictionary=json.loads(jsona['gender_ratios'])
+      dictionary=jsona['gender_ratios']
       await ctx.send(dictionary)
     
 def setup(bot):
