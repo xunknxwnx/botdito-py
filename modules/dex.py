@@ -188,7 +188,7 @@ class Dex(commands.Cog, name="Dex"):
     {entry}
     ```
     """
-    embed=discord.Embed(description=description,colour=discord.Colour(value=colors[colour]))
+    embed=discord.Embed(description=description,colour=discord.Colour(value=colours[colour]))
     embed.set_image(url=thumbnail)
     embed.set_footer(text=f"{name}, The {category} Pokemon")
     await ctx.send(embed=embed)
