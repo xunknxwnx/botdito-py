@@ -77,7 +77,7 @@ class Dex(commands.Cog, name="Dex"):
   @commands.command(name="dex")
   async def dex(self,ctx,*pokemon):
     pkmn='_'.join(pokemon)
-    pkmngif='-'.join(pokemon.lower())
+    pkmngif='-'.join(pokemon)
     pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmn.lower()}.json")
     jsona=pokedex.json()
     if not jsona:
@@ -171,7 +171,7 @@ class Dex(commands.Cog, name="Dex"):
         if 'conditions' in i.keys() and 'item' not in i.keys() and 'level' not in i.keys() and 'level_up' not in i.keys() and 'happiness' not in i.keys() and 'hold_item' not in i.keys() and 'move_learned' not in i.keys():
             evolutions+=f"{i['to']} upon meeting the following conditions: {', '.join(i['conditions'])}\n"
         
-    thumbnail=f"https://play.pokemonshowdown.com/sprites/xyani/{pkmngif}.gif"
+    thumbnail=f"https://play.pokemonshowdown.com/sprites/xyani/{pkmngif.lower()}.gif"
     description=f"""
     ```
 Abilities: 
