@@ -1,5 +1,5 @@
 import discord, requests, json
-from discord.ext import commands
+from discord.ext import commands, flags
 
 colours={
   'Red': 16724530,
@@ -75,7 +75,17 @@ class Dex(commands.Cog, name="Dex"):
     return gender
   
   @commands.command(name="dex")
-  async def dex(self,ctx,*pokemon):
+  async def dex(self,ctx,*pokemon, flag: flags.FlagParser(
+    shiny=bool,
+    form=str,
+    mega=bool,
+    x=bool,
+    y=bool
+  ) = flags.EmptyFlags):
+    shiny=flag['shiny']
+    mega=flag['mega']
+    x=flag['x']
+    y=flag['y']
     pkmn='_'.join(pokemon)
     pkmngif='-'.join(pokemon)
     pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmn.lower()}.json")
@@ -85,38 +95,13 @@ class Dex(commands.Cog, name="Dex"):
     entries=jsona['pokedex_entries']
     en=self.latestGen(entries)
     entry=en['en']
-    category=jsona['categories']['en']
     abilities=""
-    hid={True: '[Hidden]', False: ''}
-    ab=self.isHidden(jsona['abilities'])
-    for k,v in ab.items():
-      abilities+=f"{k} {hid[v]}\n"
     stats=""
-    yields=""
-    stat_names={
-      "hp": "HP",
-      "atk": "Attack",
-      "def": "Defense",
-      "sp_atk": "Special Attack",
-      "sp_def": "Special Defense",
-      "speed": "Speed"
-    }
-    for k,v in jsona['base_stats'].items():
-      stats+=f"{stat_names[k]} - {v}\n"
-    for k,v in jsona['ev_yield'].items():
-      yields+=f"{stat_names[k]} - {v}\n"
-    catch_rate=jsona['catch_rate']
-    egg_groups=', '.join(jsona['egg_groups'])
-    name=jsona['names']['en']
-    exp=jsona['base_exp_yield']
-    category=jsona['categories']['en']
-    colour=jsona['color']
-    types=', '.join(jsona['types'])
-    height=jsona['height_us']
-    weight=jsona['weight_us']
     steps=f"{str(jsona['hatch_time'][0])} to {str(jsona['hatch_time'][1])} steps"
     national=jsona['national_id']
     ratios=""
+    height=None
+    weight=None
     if jsona['gender_ratios']:
       gender=self.ratios(jsona['gender_ratios'])
       if gender['male']==True:
@@ -132,6 +117,70 @@ class Dex(commands.Cog, name="Dex"):
     evolution_from="Nothing"
     if jsona['evolution_from']:
       evolution_from=jsona['evolution_from']
+    category=jsona['categories']['en']
+    colour=jsona['color']
+    name=jsona['names']['en']
+    catch_rate=jsona['catch_rate']
+    egg_groups=', '.join(jsona['egg_groups'])
+    exp=jsona['base_exp_yield']
+    category=jsona['categories']['en']
+    yields=""
+    stat_names={
+      "hp": "HP",
+      "atk": "Attack",
+      "def": "Defense",
+      "sp_atk": "Special Attack",
+      "sp_def": "Special Defense",
+      "speed": "Speed"
+      }
+    types=None
+    for k,v in jsona['ev_yield'].items():
+      yields+=f"{stat_names[k]} - {v}\n"
+    #if mega is not true
+    if mega==False and x==False and y==False:
+      hid={True: '[Hidden]', False: ''}
+      ab=self.isHidden(jsona['abilities'])
+      for k,v in ab.items():
+        abilities+=f"{k} {hid[v]}\n"
+      for k,v in jsona['base_stats'].items():
+        stats+=f"{stat_names[k]} - {v}\n"
+      types=', '.join(jsona['types'])
+      height=jsona['height_us']
+      weight=jsona['weight_us']
+    
+    #if mega is true
+    if x==True or y==True:
+      mega=True
+    if mega==True:
+      if x==False and y==False:
+        abilities=jsona['mega_evolutions'][0]['ability']
+        types=', '.join(jsona['mega_evolutions'][0]['types'])
+        height=jsona['mega_evolutions'][0]['height_us']
+        weight=jsona['mega_evolutions'][0]['weight_us']
+        for k,v in jsona['mega_evolutions'][0]['base_stats'].items():
+          stats+=f"{stat_names[k]} - {v}\n"
+      if x==True:
+        jsonb=None
+        for i in jsona['mega_evolutions']:
+          if i['image_suffix']=='megax':
+            jsonb=i
+        abilities=jsonb['ability']
+        types=', '.join(jsonb['types'])
+        height=jsonb['height_us']
+        weight=jsonb['weight_us']
+        for k,v in jsonb['base_stats'].items():
+          stats+=f"{stat_names[k]} - {v}\n"
+      if y==True:
+        jsonb=None
+        for i in jsona['mega_evolutions']:
+          if i['image_suffix']=='megay':
+            jsonb=i
+        abilities=jsonb['ability']
+        types=', '.join(jsonb['types'])
+        height=jsonb['height_us']
+        weight=jsonb['weight_us']
+        for k,v in jsonb['base_stats'].items():
+          stats+=f"{stat_names[k]} - {v}\n"
     evolutions="None"
     if jsona['evolutions']:
       evolutions=""
@@ -169,9 +218,14 @@ class Dex(commands.Cog, name="Dex"):
           else:
             evolutions+=f"{i['to']} upon leveling after learning {i['move_learned']}\n"
         if 'conditions' in i.keys() and 'item' not in i.keys() and 'level' not in i.keys() and 'level_up' not in i.keys() and 'happiness' not in i.keys() and 'hold_item' not in i.keys() and 'move_learned' not in i.keys():
-            evolutions+=f"{i['to']} upon meeting the following conditions: {', '.join(i['conditions'])}\n"
-        
-    thumbnail=f"https://play.pokemonshowdown.com/sprites/xyani/{pkmngif.lower()}.gif"
+          evolutions+=f"{i['to']} upon meeting the following conditions: {', '.join(i['conditions'])}\n"
+    optiongif=''
+    if shiny=True:
+      optiongif='-shiny'
+    m=''
+    if mega=True:
+      m='-mega'
+    thumbnail=f"https://play.pokemonshowdown.com/sprites/xyani{optiongif}/{pkmngif.lower()}{m}.gif"
     description=f"""
 Abilities: 
 {abilities}
