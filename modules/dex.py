@@ -57,9 +57,9 @@ class Dex(commands.Cog, name="Dex"):
     ab={}
     for ability in abilities:
       if 'hidden' in ability.keys():
-        ab[ability['name']]['hidden']=True
+        ab[ability['name']]=True
       else:
-        ab[ability['name']]['hidden']=False
+        ab[ability['name']]=False
     return hidden, nothid
   
   @commands.command(name="dex")
