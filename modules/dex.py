@@ -164,7 +164,7 @@ class Dex(commands.Cog, name="Dex"):
             evolutions+=f"{i['to']} upon leveling while holding a(n) {i['hold_item']}\n"
         if 'move_learned' in i.keys():
           if 'conditions' in i.keys():
-            evolutions+=f"{i['to'] upon leveling after learning {i['move_learned']} | Conditions: {', '.join(i['conditions'])}\n"
+            evolutions+=f"{i['to']} upon leveling after learning {i['move_learned']} | Conditions: {', '.join(i['conditions'])}\n"
           else:
             evolutions+=f"{i['to'] upon leveling after learning {i['move_learned']}\n"
         if 'conditions' in i.keys() and 'item' not in i.keys() and 'level' not in i.keys() and 'level_up' not in i.keys() and 'happiness' not in i.keys() and 'hold_item' not in i.keys() and 'move_learned' not in i.keys():
