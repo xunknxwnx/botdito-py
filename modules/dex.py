@@ -170,7 +170,7 @@ class Dex(commands.Cog, name="Dex"):
         if 'conditions' in i.keys() and 'item' not in i.keys() and 'level' not in i.keys() and 'level_up' not in i.keys() and 'happiness' not in i.keys() and 'hold_item' not in i.keys() and 'move_learned' not in i.keys():
             evolutions+=f"{i['to']} upon meeting the following conditions: {', '.join(i['conditions'])}\n"
         
-    thumbnail=f"http://www.smogon.com/dex/media/sprites/xy/{pkmn.toLowerCase()}.gif"
+    thumbnail=f"http://www.smogon.com/dex/media/sprites/sm/{pkmn.lower()}.gif"
     description=f"""
     ```
     Abilities: {abilities}
