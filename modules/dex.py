@@ -50,7 +50,7 @@ class Dex(commands.Cog, name="Dex"):
     
   def latestGen(self,entries):
     for gen in games:
-      if entries[gen]:
+      if gen in entries.keys():
         return entries[gen]
   
   def isHidden(self,abilities):
@@ -77,7 +77,7 @@ class Dex(commands.Cog, name="Dex"):
     hid={True: '[Hidden]', False: ''}
     ab=self.isHidden(jsona['abilities'])
     for k,v in ab.items():
-      await ctx.send(f"{k} - {v}")
+      abilities+=f"{k} {hid[v]}\n"
     stats=""
     yields=""
     stat_names={
@@ -100,7 +100,7 @@ class Dex(commands.Cog, name="Dex"):
     types=', '.join(jsona['types'])
     height=jsona['height_us']
     weight=jsona['weight_us']
-    steps=' to '.join(jsona['hatch_time'])
+    steps=[' to '.join(str(i)) for i in jsona['hatch_time']]
     national=jsona['national_id']
     dictionary=json.loads(jsona['gender_ratios'])
     await ctx.send(dictionary)
