@@ -196,7 +196,7 @@ Evolutions:
     """
     embed=discord.Embed(description=description,colour=discord.Colour(value=colours[colour]))
     embed.set_image(url=thumbnail)
-    embed.set_footer(text=f"{name}, The {category} Pokemon")
+    embed.set_footer(text=f"{name}, The {category}")
     await ctx.send(embed=embed)
     
 def setup(bot):
