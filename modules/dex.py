@@ -1,4 +1,4 @@
-import discord, requests
+import discord, requests, json
 from discord.ext import commands
 
 colours={
@@ -56,20 +56,45 @@ class Dex(commands.Cog, name="Dex"):
   @commands.command(name="dex")
   async def dex(self,ctx,*pokemon):
     pkmnfile='_'.join(pokemon)
-    print(pkmnfile)
     pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmnfile.lower()}.json")
-    json=pokedex.json()
-    if not json:
+    jsona=pokedex.json()
+    jsonb=json.loads(jsona)
+    if not jsona:
       return await ctx.send("Pokemon not found.")
-    entries=json['pokedex_entries']
+    entries=jsona['pokedex_entries']
     en=self.latestGen(entries)
     entry=en['en']
-    category=json['categories']['en']
+    category=jsona['categories']['en']
     abilities=""
     hid={True: '[Hidden]', False: ''}
-    for i in json['abilities']:
+    for i in jsona['abilities']:
       abilities+=f"{i.name} {hid[i.hidden]}\n"
-    
+    stats=""
+    yields=""
+    stat_names={
+      "hp": "HP",
+      "atk": "Attack",
+      "def": "Defense",
+      "sp_atk": "Special Attack",
+      "sp_def": "Special Defense",
+      "speed": "Speed"
+    }
+    for k,v in jsonb['base_stats'].items():
+      stats+=f"{stat_names[k]} - {v}\n"
+    for k,v in jsonb['ev_yield'].items():
+      yields+=f"{stat_names[k]} - {v}\n"
+    catch_rate=jsona['catch_rate']
+    egg_groups=', '.join(jsona['egg_groups'])
+    name=jsona['names']['en']
+    category=jsona['categories']['en']
+    colour=jsona['color']
+    types=', '.join(jsona['types'])
+    height=jsona['height_us']
+    weight=jsona['weight_us']
+    steps=' to '.join(jsona['hatch_time'])
+    national=jsona['national_id']
+    dictionary=json.loads(jsona['gender_ratios'])
+    await ctx.send(dictionary)
     
 def setup(bot):
   bot.add_cog(Dex(bot))
