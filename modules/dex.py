@@ -62,10 +62,22 @@ class Dex(commands.Cog, name="Dex"):
         ab[ability['name']]=False
     return ab
   
+  def ratios(self,genders):
+    gender={}
+    if 'male' in genders.keys():
+      gender['male']=True
+    else:
+      gender['male']=False
+    if 'female' in genders.keys():
+      gender['female']=True
+    else:
+      gender['female']=False
+    return gender
+  
   @commands.command(name="dex")
   async def dex(self,ctx,*pokemon):
-    pkmnfile='_'.join(pokemon)
-    pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmnfile.lower()}.json")
+    pkmn='_'.join(pokemon)
+    pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmn.lower()}.json")
     jsona=pokedex.json()
     if not jsona:
       return await ctx.send("Pokemon not found.")
@@ -95,6 +107,7 @@ class Dex(commands.Cog, name="Dex"):
     catch_rate=jsona['catch_rate']
     egg_groups=', '.join(jsona['egg_groups'])
     name=jsona['names']['en']
+    exp=jsona['base_exp_yield']
     category=jsona['categories']['en']
     colour=jsona['color']
     types=', '.join(jsona['types'])
@@ -102,9 +115,83 @@ class Dex(commands.Cog, name="Dex"):
     weight=jsona['weight_us']
     steps=[' to '.join(str(i)) for i in jsona['hatch_time']]
     national=jsona['national_id']
+    ratios=""
     if jsona['gender_ratios']:
-      dictionary=jsona['gender_ratios']
-      await ctx.send(dictionary)
+      gender=self.ratios(jsona['gender_ratios'])
+      if gender['male']==True:
+        ratios+=f"Male - {jsona['gender_ratios']['male']}%\n"
+      else:
+        ratios+=f"Male - 0%\n"
+      if gender['female']==True:
+        ratios+=f"Female - {jsona['gender_ratios']['female']}%"
+      else:
+        ratios+=f"Female - 0%"
+    else:
+      ratios="No Genders"
+    evolution_from="Nothing"
+    if jsona['evolution_from']:
+      evolution_from=jsona['evolution_from']
+    evolutions="None"
+    if jsona['evolutions']:
+      evolutions=""
+      for i in jsona['evolutions']:
+        if 'item' in i.keys():
+          if 'conditions' in i.keys():
+            evolutions+=f"{i['to']} by using a(n) {i['item']} | Conditions: {', '.join(i['conditions'])}\n"
+          else:
+            evolutions+=f"{i['to']} by using a(n) {i['item']}\n"
+        if 'level' in i.keys():
+          if 'conditions' in i.keys():
+            evolutions+=f"{i['to']} by leveling to level {i['level']} | Conditions: {', '.join(i['conditions'])}\n"
+          else:
+            evolutions+=f"{i['to']} by leveling to level {i['level']}\n"
+        if 'level_up' in i.keys() and 'conditions' in i.keys():
+          evolutions+=f"{i['to']} upon leveling with the following conditions met: {', '.join(i['conditions'])}\n"
+        if 'happiness' in i.keys():
+          if 'conditions' in i.keys():
+            evolutions+=f"{i['to']} upon leveling at max happiness | Conditions: {', '.join(i['conditions'])}\n"
+          else:
+            evolutions+=f"{i['to']} upon leveling at max happiness\n"
+        if 'trade' in i.keys():
+          if 'hold_item' in i.keys():
+            evolutions+=f"{i['to']} when traded while holding a(n) {i['hold_item']}\n"
+          else:
+            evolutions+=f"{i['to']} when traded\n"
+        if 'hold_item' in i.keys() and 'trade' not in i.keys():
+          if 'conditions' in i.keys():
+            evolutions+=f"{i['to']} upon leveling while holding a(n) {i['hold_item']} | Conditions: {', '.join(i['conditions'])}\n"
+          else:
+            evolutions+=f"{i['to']} upon leveling while holding a(n) {i['hold_item']}\n"
+        if 'move_learned' in i.keys():
+          if 'conditions' in i.keys():
+            evolutions+=f"{i['to'] upon leveling after learning {i['move_learned']} | Conditions: {', '.join(i['conditions'])}\n"
+          else:
+            evolutions+=f"{i['to'] upon leveling after learning {i['move_learned']}\n"
+        if 'conditions' in i.keys() and 'item' not in i.keys() and 'level' not in i.keys() and 'level_up' not in i.keys() and 'happiness' not in i.keys() and 'hold_item' not in i.keys() and 'move_learned' not in i.keys():
+            evolutions+=f"{i['to'] upon meeting the following conditions: {', '.join(i['conditions'])}\n"
+        
+    thumbnail=f"http://www.smogon.com/dex/media/sprites/xy/{pkmn.toLowerCase()}.gif"
+    description=f"""
+    ```
+    Abilities: {abilities}
+    Height: {height}
+    Weight: {weight}
+    Base Stats: {stats}
+    Base Yields: {yields}
+    Gives {exp} EXP upon defeat (base value)
+    Gender Ratios: {ratios}
+    Steps To Hatch: {steps}
+    Egg Groups: {egg_groups}
+    Evolutions:
+    {evolutions}
+    
+    {entry}
+    ```
+    """
+    embed=discord.Embed(description=description,colour=discord.Colour(value=colors[colour]))
+    embed.set_image(url=thumbnail)
+    embed.set_footer(text=f"{name}, The {category} Pokemon")
+    await ctx.send(embed=embed)
     
 def setup(bot):
   bot.add_cog(Dex(bot))
