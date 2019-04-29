@@ -77,6 +77,7 @@ class Dex(commands.Cog, name="Dex"):
   @commands.command(name="dex")
   async def dex(self,ctx,*pokemon):
     pkmn='_'.join(pokemon)
+    pkmngif='-'.join(pokemon.lower())
     pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmn.lower()}.json")
     jsona=pokedex.json()
     if not jsona:
@@ -170,22 +171,27 @@ class Dex(commands.Cog, name="Dex"):
         if 'conditions' in i.keys() and 'item' not in i.keys() and 'level' not in i.keys() and 'level_up' not in i.keys() and 'happiness' not in i.keys() and 'hold_item' not in i.keys() and 'move_learned' not in i.keys():
             evolutions+=f"{i['to']} upon meeting the following conditions: {', '.join(i['conditions'])}\n"
         
-    thumbnail=f"http://www.smogon.com/dex/media/sprites/sm/{pkmn.lower()}.gif"
+    thumbnail=f"https://play.pokemonshowdown.com/sprites/xyani/{pkmngif}.gif"
     description=f"""
     ```
-    Abilities: {abilities}
-    Height: {height}
-    Weight: {weight}
-    Base Stats: {stats}
-    Base Yields: {yields}
-    Gives {exp} EXP upon defeat (base value)
-    Gender Ratios: {ratios}
-    Steps To Hatch: {steps}
-    Egg Groups: {egg_groups}
-    Evolutions:
-    {evolutions}
-    
-    {entry}
+Abilities: 
+{abilities}
+Height: {height}
+Weight: {weight}
+Base Stats: 
+{stats}
+Base Yields: 
+{yields}
+Gives {exp} EXP upon defeat (base value)
+Gender Ratios: 
+{ratios}
+Steps To Hatch: {steps}
+Egg Groups: 
+{egg_groups}
+Evolutions:
+{evolutions}    
+
+{entry}
     ```
     """
     embed=discord.Embed(description=description,colour=discord.Colour(value=colours[colour]))
