@@ -138,10 +138,12 @@ class Dex(commands.Cog, name="Dex"):
       "speed": "Speed"
       }
     types=None
+    if x or y:
+      mega=True
     for k,v in jsona['ev_yield'].items():
       yields+=f"{stat_names[k]} - {v}\n"
     #if mega is not true
-    if mega==False and x==False and y==False:
+    if not mega:
       hid={True: '[Hidden]', False: ''}
       ab=self.isHidden(jsona['abilities'])
       for k,v in ab.items():
@@ -153,9 +155,7 @@ class Dex(commands.Cog, name="Dex"):
       weight=jsona['weight_us']
     
     #if mega is true
-    if x==True or y==True:
-      mega=True
-    if mega==True:
+    if mega:
       if x==False and y==False:
         abilities=jsona['mega_evolutions'][0]['ability']
         types=', '.join(jsona['mega_evolutions'][0]['types'])
