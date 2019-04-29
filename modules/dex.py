@@ -74,7 +74,7 @@ class Dex(commands.Cog, name="Dex"):
       gender['female']=False
     return gender
   
-  @commands.command(name="dex")
+  @commands.command(name="dex", cls=flags.FlagCommand)
   async def dex(self,ctx,*pokemon, flag: flags.FlagParser(
     shiny=bool,
     form=str,
