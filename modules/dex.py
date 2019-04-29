@@ -67,7 +67,7 @@ class Dex(commands.Cog, name="Dex"):
     abilities=""
     hid={True: '[Hidden]', False: ''}
     for i in jsona['abilities']:
-      abilities+=f"{i.name} {hid[i.hidden]}\n"
+      abilities+=f"{i['name']} {hid[i['hidden']]}\n"
     stats=""
     yields=""
     stat_names={
