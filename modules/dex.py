@@ -114,7 +114,7 @@ class Dex(commands.Cog, name="Dex"):
     types=', '.join(jsona['types'])
     height=jsona['height_us']
     weight=jsona['weight_us']
-    steps=[' to '.join(str(i)) for i in jsona['hatch_time']]
+    steps=f"{str(jsona['hatch_time'][0])} to {str(jsona['hatch_time'][1])} steps"
     national=jsona['national_id']
     ratios=""
     if jsona['gender_ratios']:
@@ -173,26 +173,36 @@ class Dex(commands.Cog, name="Dex"):
         
     thumbnail=f"https://play.pokemonshowdown.com/sprites/xyani/{pkmngif.lower()}.gif"
     description=f"""
-    ```
 Abilities: 
 {abilities}
+
 Height: {height}
+
 Weight: {weight}
+
 Base Stats: 
 {stats}
+
 Base Yields: 
 {yields}
+
 Gives {exp} EXP upon defeat (base value)
+
 Gender Ratios: 
 {ratios}
+
 Steps To Hatch: {steps}
+
 Egg Groups: 
 {egg_groups}
+
 Evolutions:
-{evolutions}    
+{evolutions}
+
+Evolves From: {evolution_from}
+
 
 {entry}
-    ```
     """
     embed=discord.Embed(description=description,colour=discord.Colour(value=colours[colour]))
     embed.set_image(url=thumbnail)
