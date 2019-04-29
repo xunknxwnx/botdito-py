@@ -220,10 +220,10 @@ class Dex(commands.Cog, name="Dex"):
         if 'conditions' in i.keys() and 'item' not in i.keys() and 'level' not in i.keys() and 'level_up' not in i.keys() and 'happiness' not in i.keys() and 'hold_item' not in i.keys() and 'move_learned' not in i.keys():
           evolutions+=f"{i['to']} upon meeting the following conditions: {', '.join(i['conditions'])}\n"
     optiongif=''
-    if shiny=True:
+    if shiny==True:
       optiongif='-shiny'
     m=''
-    if mega=True:
+    if mega==True:
       m='-mega'
     thumbnail=f"https://play.pokemonshowdown.com/sprites/xyani{optiongif}/{pkmngif.lower()}{m}.gif"
     description=f"""
