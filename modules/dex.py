@@ -60,7 +60,7 @@ class Dex(commands.Cog, name="Dex"):
         ab[ability['name']]=True
       else:
         ab[ability['name']]=False
-    return hidden, nothid
+    return ab
   
   @commands.command(name="dex")
   async def dex(self,ctx,*pokemon):
