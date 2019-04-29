@@ -58,7 +58,6 @@ class Dex(commands.Cog, name="Dex"):
     pkmnfile='_'.join(pokemon)
     pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmnfile.lower()}.json")
     jsona=pokedex.json()
-    jsonb=json.loads(jsona)
     if not jsona:
       return await ctx.send("Pokemon not found.")
     entries=jsona['pokedex_entries']
@@ -79,9 +78,9 @@ class Dex(commands.Cog, name="Dex"):
       "sp_def": "Special Defense",
       "speed": "Speed"
     }
-    for k,v in jsonb['base_stats'].items():
+    for k,v in jsona['base_stats'].items():
       stats+=f"{stat_names[k]} - {v}\n"
-    for k,v in jsonb['ev_yield'].items():
+    for k,v in jsona['ev_yield'].items():
       yields+=f"{stat_names[k]} - {v}\n"
     catch_rate=jsona['catch_rate']
     egg_groups=', '.join(jsona['egg_groups'])
