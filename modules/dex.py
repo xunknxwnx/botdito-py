@@ -102,8 +102,9 @@ class Dex(commands.Cog, name="Dex"):
     weight=jsona['weight_us']
     steps=[' to '.join(str(i)) for i in jsona['hatch_time']]
     national=jsona['national_id']
-    dictionary=json.loads(jsona['gender_ratios'])
-    await ctx.send(dictionary)
+    if jsona['gender_ratios']:
+      dictionary=json.loads(jsona['gender_ratios'])
+      await ctx.send(dictionary)
     
 def setup(bot):
   bot.add_cog(Dex(bot))
