@@ -75,22 +75,26 @@ class Dex(commands.Cog, name="Dex"):
     return gender
   
   @commands.command(name="dex", cls=flags.FlagCommand)
-  async def dex(self,ctx,*pokemon, flag: flags.FlagParser(
+  async def dex(self,ctx,pokemon,*,flag: flags.FlagParser(
     shiny=bool,
     form=str,
     mega=bool,
     x=bool,
     y=bool
   ) = flags.EmptyFlags):
+    """
+    If you use this command please note that if you wish to search for a Pokemon with two or more words in their name, you'll need to use quotes. (")
+    """
     shiny=flag['shiny']
     mega=flag['mega']
     x=flag['x']
     y=flag['y']
-    pkmn='_'.join(pokemon)
-    pkmngif='-'.join(pokemon)
+    pk=pokemon.split()
+    pkmn='_'.join(pk)
+    pkmngif='-'.join(pk)
     pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmn.lower()}.json")
     jsona=pokedex.json()
-    if not jsona:
+    if not pokedex:
       return await ctx.send("Pokemon not found.")
     entries=jsona['pokedex_entries']
     en=self.latestGen(entries)
