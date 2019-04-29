@@ -52,7 +52,16 @@ class Dex(commands.Cog, name="Dex"):
     for gen in games:
       if entries[gen]:
         return entries[gen]
-    
+  
+  def isHidden(self,abilities):
+    ab={}
+    for ability in abilities:
+      if 'hidden' in ability.keys():
+        ab[ability['name']]['hidden']=True
+      else:
+        ab[ability['name']]['hidden']=False
+    return hidden, nothid
+  
   @commands.command(name="dex")
   async def dex(self,ctx,*pokemon):
     pkmnfile='_'.join(pokemon)
@@ -66,8 +75,9 @@ class Dex(commands.Cog, name="Dex"):
     category=jsona['categories']['en']
     abilities=""
     hid={True: '[Hidden]', False: ''}
-    for i in jsona['abilities']:
-      abilities+=f"{i['name']} {hid[i['hidden']]}\n"
+    ab=self.isHidden(jsona['abilities'])
+    for k,v in ab.items():
+      await ctx.send(f"{k} - {v}")
     stats=""
     yields=""
     stat_names={
