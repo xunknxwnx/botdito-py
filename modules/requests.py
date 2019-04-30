@@ -88,7 +88,7 @@ class Requests(commands.Cog, name='Requests'):
       return await ctx.send("You need to provide a console to view a friend code!")
     if console.lower() not in validconsoles:
       return await ctx.send("Invalid console. This command is used by doing ``+fc search <console> <username>``. Valid consoles are ``3ds`` and ``switch``. Please try again.")
-    members=[i for i in ctx.guild.members if username in i.name]
+    members=[i for i in ctx.guild.members if username in i.name or username in i.display_name]
     if not members:
       return await ctx.send("No users found.")
       async with self.bot.db.acquire() as db:
