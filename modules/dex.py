@@ -191,38 +191,38 @@ class Dex(commands.Cog, name="Dex"):
       for i in jsona['evolutions']:
         if 'item' in i.keys():
           if 'conditions' in i.keys():
-            evolutions+=f"{i['to']} by using a(n) {i['item']} | Conditions: {', '.join(i['conditions'])}\n"
+            evolutions+=f"- {i['to']} by using a(n) {i['item']} | Conditions: {', '.join(i['conditions'])}\n"
           else:
-            evolutions+=f"{i['to']} by using a(n) {i['item']}\n"
+            evolutions+=f"- {i['to']} by using a(n) {i['item']}\n"
         if 'level' in i.keys():
           if 'conditions' in i.keys():
-            evolutions+=f"{i['to']} by leveling to level {i['level']} | Conditions: {', '.join(i['conditions'])}\n"
+            evolutions+=f"- {i['to']} by leveling to level {i['level']} | Conditions: {', '.join(i['conditions'])}\n"
           else:
-            evolutions+=f"{i['to']} by leveling to level {i['level']}\n"
+            evolutions+=f"- {i['to']} by leveling to level {i['level']}\n"
         if 'level_up' in i.keys() and 'conditions' in i.keys():
-          evolutions+=f"{i['to']} upon leveling with the following conditions met: {', '.join(i['conditions'])}\n"
+          evolutions+=f"- {i['to']} upon leveling with the following conditions met: {', '.join(i['conditions'])}\n"
         if 'happiness' in i.keys():
           if 'conditions' in i.keys():
-            evolutions+=f"{i['to']} upon leveling at max happiness | Conditions: {', '.join(i['conditions'])}\n"
+            evolutions+=f"- {i['to']} upon leveling at max happiness | Conditions: {', '.join(i['conditions'])}\n"
           else:
-            evolutions+=f"{i['to']} upon leveling at max happiness\n"
+            evolutions+=f"- {i['to']} upon leveling at max happiness\n"
         if 'trade' in i.keys():
           if 'hold_item' in i.keys():
-            evolutions+=f"{i['to']} when traded while holding a(n) {i['hold_item']}\n"
+            evolutions+=f"- {i['to']} when traded while holding a(n) {i['hold_item']}\n"
           else:
-            evolutions+=f"{i['to']} when traded\n"
+            evolutions+=f"- {i['to']} when traded\n"
         if 'hold_item' in i.keys() and 'trade' not in i.keys():
           if 'conditions' in i.keys():
-            evolutions+=f"{i['to']} upon leveling while holding a(n) {i['hold_item']} | Conditions: {', '.join(i['conditions'])}\n"
+            evolutions+=f"- {i['to']} upon leveling while holding a(n) {i['hold_item']} | Conditions: {', '.join(i['conditions'])}\n"
           else:
-            evolutions+=f"{i['to']} upon leveling while holding a(n) {i['hold_item']}\n"
+            evolutions+=f"- {i['to']} upon leveling while holding a(n) {i['hold_item']}\n"
         if 'move_learned' in i.keys():
           if 'conditions' in i.keys():
-            evolutions+=f"{i['to']} upon leveling after learning {i['move_learned']} | Conditions: {', '.join(i['conditions'])}\n"
+            evolutions+=f"- {i['to']} upon leveling after learning {i['move_learned']} | Conditions: {', '.join(i['conditions'])}\n"
           else:
-            evolutions+=f"{i['to']} upon leveling after learning {i['move_learned']}\n"
+            evolutions+=f"- {i['to']} upon leveling after learning {i['move_learned']}\n"
         if 'conditions' in i.keys() and 'item' not in i.keys() and 'level' not in i.keys() and 'level_up' not in i.keys() and 'happiness' not in i.keys() and 'hold_item' not in i.keys() and 'move_learned' not in i.keys():
-          evolutions+=f"{i['to']} upon meeting the following conditions: {', '.join(i['conditions'])}\n"
+          evolutions+=f"- {i['to']} upon meeting the following conditions: {', '.join(i['conditions'])}\n"
     optiongif=''
     if shiny==True:
       optiongif='-shiny'
