@@ -110,7 +110,7 @@ class Requests(commands.Cog, name='Requests'):
         index+=1
       embed=discord.Embed(description=text, colour=discord.Colour().blue)
       thing=await ctx.send(embed=embed)
-      e=True     
+      e=True
       
 def setup(bot):
   bot.add_cog(Requests(bot))
