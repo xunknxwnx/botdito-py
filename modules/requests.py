@@ -8,6 +8,20 @@ class Requests(commands.Cog, name='Requests'):
   def chunk(self,l,size):
     for i in range(0,len(l),size):
       yield l[i:i+size]
+
+  def predicate(self, message, l, r):
+    def check(reaction, user):
+      if reaction.message.id != message.id or user == self.bot.user:
+        return False
+      if l and reaction.emoji == '⏪':
+        return True
+      if r and reaction.emoji == '⏩':
+        return True
+      if reaction.emoji == '⏹':
+        return True
+      return False
+
+    return check
     
   @commands.group(name="friendcode",aliases=['fc'])
   async def fc(self,ctx):
@@ -102,16 +116,18 @@ class Requests(commands.Cog, name='Requests'):
         friendcode=await db.fetchrow(f"SELECT {consolea.lower()} FROM people WHERE user_id={i.id}")
         if friendcode[consolea.lower()]:
           people.append(i)
-      final=self.chunk(people, 10)
+      final=self.chunk(people, 25)
       text=""
       index=1
       for i in final:
         text+=f"{index} - {i.name}\n"
         index+=1
       embed=discord.Embed(description=text, colour=discord.Colour.blue())
-      thing=await ctx.send(embed=embed)
-      e=True
-      if len(final)
-      
-def setup(bot):
+      msg=await ctx.send(embed=embed)
+      await ctx.send("Please select a user by saying a number.")
+      def check(m):
+        return True if m.author==ctx.author and m.channel==ctx.channel and isinstance(m.content, int) else False
+      wait=await self.bot.wait_for('message', check=check)
+      num=int(wait.content)
+      await ctx.send(final[num-1])
   bot.add_cog(Requests(bot))
