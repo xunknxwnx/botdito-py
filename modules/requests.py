@@ -116,4 +116,6 @@ class Requests(commands.Cog, name='Requests'):
       wait=await self.bot.wait_for('message', check=check)
       num=int(wait.content)
       await ctx.send(final[num-1])
+ 
+def setup(bot):
   bot.add_cog(Requests(bot))
