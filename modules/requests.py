@@ -108,9 +108,10 @@ class Requests(commands.Cog, name='Requests'):
       for i in final:
         text+=f"{index} - {i.name}\n"
         index+=1
-      embed=discord.Embed(description=text, colour=discord.Colour().blue)
+      embed=discord.Embed(description=text, colour=discord.Colour.blue())
       thing=await ctx.send(embed=embed)
       e=True
+      if len(final)
       
 def setup(bot):
   bot.add_cog(Requests(bot))
