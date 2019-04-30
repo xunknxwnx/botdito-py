@@ -97,12 +97,12 @@ class Requests(commands.Cog, name='Requests'):
       else:
         consolea=console
       people=[]
-      await ctx.send(consolea)
       for i in members:
         friendcode=await db.fetchrow(f"SELECT {consolea.lower()} FROM people WHERE user_id={i.id}")
         if friendcode[consolea.lower()]:
           people.append(i)
       final=self.chunk(people, 25)
+      await ctx.send(final)
       text=""
       index=1
       for i in final:
@@ -112,7 +112,7 @@ class Requests(commands.Cog, name='Requests'):
       msg=await ctx.send(embed=embed)
       await ctx.send("Please select a user by saying a number.")
       def check(m):
-        return True if m.author==ctx.author and m.channel==ctx.channel and isinstance(m.content, int) else False
+        return True if m.author==ctx.author and m.channel==ctx.channel else False
       wait=await self.bot.wait_for('message', check=check)
       num=int(wait.content)
       await ctx.send(final[num-1])
