@@ -8,20 +8,6 @@ class Requests(commands.Cog, name='Requests'):
   def chunk(self,l,size):
     for i in range(0,len(l),size):
       yield l[i:i+size]
-
-  def predicate(self, message, l, r):
-    def check(reaction, user):
-      if reaction.message.id != message.id or user == self.bot.user:
-        return False
-      if l and reaction.emoji == '⏪':
-        return True
-      if r and reaction.emoji == '⏩':
-        return True
-      if reaction.emoji == '⏹':
-        return True
-      return False
-
-    return check
     
   @commands.group(name="friendcode",aliases=['fc'])
   async def fc(self,ctx):
