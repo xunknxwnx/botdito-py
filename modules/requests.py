@@ -140,6 +140,7 @@ class Requests(commands.Cog, name='Requests'):
         return await ctx.send("Sorry, you cannot request at this time. Please wait for your other requests to be completed and try again!")
       await ctx.author.send(f"Hello! You can currently request {6-len(currequests['ongoing'])} Pokemon! Which way would you like to request them?\n```A) Pokepaste\nB) Showdown Import\nC) PKx```\n\nJust say A, B, or C.")
       validmethods=['a','b','c']
+      label .start
       wait1=await self.bot.wait_for('message',check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and message.content in validmethods)
       method=wait1.content.lower()
       if method=='a':
@@ -152,15 +153,40 @@ class Requests(commands.Cog, name='Requests'):
             thing=await resp.read()
             thing=literal_eval(thing.decode('utf-8'))
             team=self.pokemon_getter(thing['paste'],'\r\n\r\n')
-            team=''.join(team).replace('\r\n','\n')
-            await ctx.author.send(f"Is this team correct?\n```{team}```")
+            team2='\n'.join(team).replace('\r\n','\n')
+            for i in team:
+              i.replace('\r\n','\n')
+            await ctx.author.send(f"Is this team correct?\n```{team2}```")
             wait3=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and message.content.lower() in ['yes','no'])
             answer=wait3.content.lower()
             if answer=='no':
               await ctx.author.send("Okay, please resubmit the url!")
               goto .teampkps
             else:
-              await ctx.author.send("Alright!")
-            
+              channel=discord.utils.get(ctx.guild.channels,name='genning-requests')
+              await ctx.author.send("What is your in game name? This is so the genners can find you quickly and easy.")
+              wait4=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel)
+              ign=wait4.content
+              msg=await channel.send(f"{ign} ({ctx.author.mention}) has submitted the following team!\n```{team2}```")
+              await db.execute(f"UPDATE requests SET requests=requests || {team},ongoing=ongoing || {team} WHERE user_id={ctx.author.id}")
+              await db.execute(f"INSERT INTO ongoing(message, status, requester) VALUES({msg.id}, ''NOT DONE'', {ctx.author.id})")
+            session.close()
+      elif method=='b':
+        await ctx.author.send("Okay! Please send a valid Pokemon Showdown team.")
+        wait2=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel)
+        team=wait2.content
+        team=self.pokemon_getter(team,'\n\n')
+        channel=discord.utils.get(ctx.guild.channels,name='genning-requests')
+        await ctx.author.send("What is your in game name? This is so the genners can find you quickly and easy.")
+        wait3=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel)
+        ign=wait3.content
+        msg=await channel.send(f"{ign} ({ctx.author.mention}) has submitted the following team!\n```{''.join(team)}```")
+        await db.execute(f"UPDATE requests SET requests=requests || {team},ongoing=ongoing || {team} WHERE user_id={ctx.author.id}")
+        await db.execute(f"INSERT INTO ongoing(message, status, requester) VALUES({msg.id}, ''NOT DONE'', {ctx.author.id})")
+      elif method=='c':
+        await ctx.author.send("NOT SUPPORTED")
+        goto .start
+                               
+                               
 def setup(bot):
   bot.add_cog(Requests(bot))
