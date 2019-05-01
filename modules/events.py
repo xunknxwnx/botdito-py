@@ -9,9 +9,9 @@ class Events(commands.Cog, name="Events"):
     person=await self.bot.db.fetchrow(f"SELECT * FROM people WHERE user_id={user.id}")
     requests=await self.bot.db.fetchrow(f"SELECT * FROM requests WHERE user_id={user.id}")
     if not person:
-      await self.bot.db.execute(f"INSERT INTO people(user_id, ds, switch) VALUES({member.id}, '', '')")
+      await self.bot.db.execute(f"INSERT INTO people(user_id, ds, switch) VALUES({user.id}, '', '')")
     if not requests:
-      await self.bot.db.execute(f"INSERT INTO requests(user_id, requests, ongoing) VALUES({member.id}, ARRAY []::text[], ARRAY []::text[])")
+      await self.bot.db.execute(f"INSERT INTO requests(user_id, requests, ongoing) VALUES({user.id}, ARRAY []::text[], ARRAY []::text[])")
   
   @commands.Cog.listener()                       
   async def on_member_join(self,member):
