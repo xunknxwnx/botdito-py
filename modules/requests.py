@@ -146,7 +146,8 @@ class Requests(commands.Cog, name='Requests'):
         async with aiohttp.ClientSession() as session:
           async with session.get(url+'/json') as resp:
             thing=await resp.read()
-            print(thing)
+            print(thing['paste'])
+            
             
         
         
