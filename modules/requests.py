@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from urllib.parse import urlparse
 
 class Requests(commands.Cog, name='Requests'):
   def __init__(self,bot):
@@ -120,7 +121,22 @@ class Requests(commands.Cog, name='Requests'):
       
   @commands.group(name='request')
   async def requests(self,ctx):
-    pass
+    role=discord.utils.get(ctx.guild.roles,name='SnowBuddy')
+    if role not in ctx.author.roles:
+      return await ctx.send("You need to add your FC. Please set it by doing ``+fc set``")
+    async with self.bot.db.acquire() as db:
+      currequests=await db.fetchrow(f"SELECT * FROM requests WHERE user_id={ctx.author.id}")
+      if len(currequests['ongoing'])==6:
+        return await ctx.send("Sorry, you cannot request at this time. Please wait for your other requests to be completed and try again!")
+      await ctx.author.send(f"Hello! You can currently request {6-len(currequests['ongoing'])} Pokemon! Which way would you like to request them?\n```A) Pokepaste\nB) Showdown Import\nC) PKx```\n\nJust say A, B, or C.")
+      validmethods=['a','b','c']
+      wait1=await self.bot.wait_for('message',check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and message.content in validmethods)
+      method=wait1.content.lower()
+      if method=='a':
+        await ctx.author.send("Okay, please send a Pokepaste link!")
+        wait2=await self.bot.wait_for('message', lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and bool(urlparse(message.content).netloc) and urlparse(message.content).netloc=='pokepast.es')
+        url=wait2.content
+        
  
 def setup(bot):
   bot.add_cog(Requests(bot))
