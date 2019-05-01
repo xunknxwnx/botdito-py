@@ -148,7 +148,6 @@ class Requests(commands.Cog, name='Requests'):
           async with session.get(url+'/json') as resp:
             thing=await resp.read()
             thing=literal_eval(thing.decode('utf-8'))
-            thing=json.dumps(thing, indent=2, sort_keys=True)
             team=self.pokemon_counter(thing['paste'],r'\r\n\r\n')
             print(team)
             
