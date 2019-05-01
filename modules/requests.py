@@ -116,6 +116,11 @@ class Requests(commands.Cog, name='Requests'):
       wait=await self.bot.wait_for('message', check=check)
       num=int(wait.content)
       await ctx.send(final[num-1])
+      await self.bot.db.release(db)
+      
+  @commands.group(name='request')
+  async def requests(self,ctx):
+    pass
  
 def setup(bot):
   bot.add_cog(Requests(bot))
