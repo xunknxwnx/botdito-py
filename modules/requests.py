@@ -2,6 +2,7 @@ import discord, aiohttp, json
 from discord.ext import commands
 from urllib.parse import urlparse
 from ast import literal_eval
+from goto import with_goto
 
 class Requests(commands.Cog, name='Requests'):
   def __init__(self,bot):
@@ -12,11 +13,11 @@ class Requests(commands.Cog, name='Requests'):
       yield l[i:i+size]
    
   def pokemon_counter(self,team,string):
-    count=0
     thing=team.split(string)
+    pokemon=[]
     for i in thing:
-      count+=1
-    return count
+      pokemon.append(i)
+    return pokemon
     
   @commands.group(name="friendcode",aliases=['fc'])
   async def fc(self,ctx):
@@ -128,6 +129,7 @@ class Requests(commands.Cog, name='Requests'):
       await self.bot.db.release(db)
       
   @commands.group(name='request')
+  @with_goto
   async def requests(self,ctx):
     role=discord.utils.get(ctx.guild.roles,name='SnowBuddy')
     if role not in ctx.author.roles:
@@ -142,14 +144,22 @@ class Requests(commands.Cog, name='Requests'):
       method=wait1.content.lower()
       if method=='a':
         await ctx.author.send("Okay, please send a Pokepaste link! Please ensure that this url starts with ``http://`` or ``https://``!")
+        label .team
         wait2=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and urlparse(message.content).netloc=='pokepast.es')
         url=wait2.content
         async with aiohttp.ClientSession() as session:
           async with session.get(url+'/json') as resp:
             thing=await resp.read()
             thing=literal_eval(thing.decode('utf-8'))
-            team=self.pokemon_counter(thing['paste'],'\r\n\r\n')
-            print(f"There are {team} in this team:\n{thing}")
+            team=self.pokemon_getter(thing['paste'],'\r\n\r\n')
+            await ctx.author.send(f"Is this team correct?\n```{team}```")
+            wait3=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and message.content.lower() in ['yes','no'])
+            answer=wait3.content.lower()
+            if answer='no':
+              await ctx.send("Okay, please resubmit the url!")
+              goto .team
+            else:
+              await ctx.send("Alright!")
             
 def setup(bot):
   bot.add_cog(Requests(bot))
