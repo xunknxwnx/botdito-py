@@ -145,7 +145,7 @@ class Requests(commands.Cog, name='Requests'):
         url=wait2.content
         async with aiohttp.ClientSession() as session:
           async with session.get(url) as resp:
-            print(resp.read())
+            print(await resp.read())
         
         
 def setup(bot):
