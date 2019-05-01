@@ -148,7 +148,7 @@ class Requests(commands.Cog, name='Requests'):
           async with session.get(url+'/json') as resp:
             thing=await resp.read()
             thing=thing.decode('utf-8').replace("'",'"')[1:-1]
-            print(thing['paste'])
+            print(thing[0]['paste'])
             
             
         
