@@ -133,7 +133,7 @@ class Requests(commands.Cog, name='Requests'):
       return await ctx.send("You need to add your FC. Please set it by doing ``+fc set``")
     async with self.bot.db.acquire() as db:
       currequests=await db.fetchrow(f"SELECT * FROM requests WHERE user_id={ctx.author.id}")
-      if len(currequests['ongoing'])==6 or not currequests['ongoing']:
+      if len(currequests['ongoing'])==6:
         return await ctx.send("Sorry, you cannot request at this time. Please wait for your other requests to be completed and try again!")
       await ctx.author.send(f"Hello! You can currently request {6-len(currequests['ongoing'])} Pokemon! Which way would you like to request them?\n```A) Pokepaste\nB) Showdown Import\nC) PKx```\n\nJust say A, B, or C.")
       validmethods=['a','b','c']
