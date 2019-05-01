@@ -13,7 +13,7 @@ class Requests(commands.Cog, name='Requests'):
    
   def pokemon_counter(self,team,string):
     count=0
-    thing=team.split("\r\n\r\n")
+    thing=team.split(string)
     for i in thing:
       count+=1
     return count
@@ -148,8 +148,9 @@ class Requests(commands.Cog, name='Requests'):
           async with session.get(url+'/json') as resp:
             thing=await resp.read()
             thing=literal_eval(thing.decode('utf-8'))
-            s = json.dumps(thing, indent=2, sort_keys=True)
-            print(s)
+            thing=json.dumps(thing, indent=2, sort_keys=True)
+            team=self.pokemon_counter(thing['paste'],r'\r\n\r\n')
+            print(team)
             
 def setup(bot):
   bot.add_cog(Requests(bot))
