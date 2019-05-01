@@ -262,7 +262,8 @@ Egg Groups:
 Evolutions:
 {evolutions}
 
-Evolves From: {evolution_from}
+Evolves From:
+{evolution_from}
 
 
 {entry}
