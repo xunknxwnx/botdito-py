@@ -12,7 +12,7 @@ class Requests(commands.Cog, name='Requests'):
     for i in range(0,len(l),size):
       yield l[i:i+size]
    
-  def pokemon_counter(self,team,string):
+  def pokemon_getter(self,team,string):
     thing=team.split(string)
     pokemon=[]
     for i in thing:
