@@ -155,7 +155,7 @@ class Requests(commands.Cog, name='Requests'):
             await ctx.author.send(f"Is this team correct?\n```{team}```")
             wait3=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and message.content.lower() in ['yes','no'])
             answer=wait3.content.lower()
-            if answer='no':
+            if answer=='no':
               await ctx.send("Okay, please resubmit the url!")
               goto .team
             else:
