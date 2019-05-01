@@ -148,8 +148,8 @@ class Requests(commands.Cog, name='Requests'):
           async with session.get(url+'/json') as resp:
             thing=await resp.read()
             thing=literal_eval(thing.decode('utf-8'))
-            team=self.pokemon_counter(thing['paste'],r'\r\n\r\n')
-            print(team)
+            team=self.pokemon_counter(thing['paste'],'\r\n\r\n')
+            print(f"There are {team} in this team:\n{thing}")
             
 def setup(bot):
   bot.add_cog(Requests(bot))
