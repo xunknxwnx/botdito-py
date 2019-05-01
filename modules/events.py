@@ -11,12 +11,12 @@ class Events(commands.Cog, name="Events"):
     if not person:
       await self.bot.db.execute(f"INSERT INTO people(user_id, ds, switch) VALUES({member.id}, '', '')")
     if not requests:
-      await self.bot.db.execute(f"INSERT INTO requests(user_id, requests, ongoing) VALUES({member.id}, ARRAY [], ARRAY [])")
+      await self.bot.db.execute(f"INSERT INTO requests(user_id, requests, ongoing) VALUES({member.id}, ARRAY []::text[], ARRAY []::text[])")
   
   @commands.Cog.listener()                       
   async def on_member_join(self,member):
     await self.bot.db.execute(f"INSERT INTO people(user_id, ds, switch) VALUES({member.id}, '', '')")
-    await self.bot.db.execute(f"INSERT INTO requests(user_id, requests, ongoing) VALUES({member.id}, ARRAY [], ARRAY [])")
+    await self.bot.db.execute(f"INSERT INTO requests(user_id, requests, ongoing) VALUES({member.id}, ARRAY []::text[], ARRAY []::text[])")
     
   @commands.Cog.listener()
   async def on_member_leave(self,member):
