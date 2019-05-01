@@ -152,7 +152,8 @@ class Requests(commands.Cog, name='Requests'):
             thing=await resp.read()
             thing=literal_eval(thing.decode('utf-8'))
             team=self.pokemon_getter(thing['paste'],'\r\n\r\n')
-            await ctx.author.send(f"Is this team correct?\n```{''.join(team).replace('\r\n','\n')}```")
+            team=''.join(team).replace('\r\n','\n')
+            await ctx.author.send(f"Is this team correct?\n```{team}```")
             wait3=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and message.content.lower() in ['yes','no'])
             answer=wait3.content.lower()
             if answer=='no':
