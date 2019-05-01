@@ -1,4 +1,4 @@
-import discord
+import discord, aiohttp
 from discord.ext import commands
 from urllib.parse import urlparse
 
@@ -140,10 +140,11 @@ class Requests(commands.Cog, name='Requests'):
       wait1=await self.bot.wait_for('message',check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and message.content in validmethods)
       method=wait1.content.lower()
       if method=='a':
-        await ctx.author.send("Okay, please send a Pokepaste link!")
+        await ctx.author.send("Okay, please send a Pokepaste link! Please ensure that this url starts with ``http://`` or ``https://``!")
         wait2=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and urlparse(message.content).netloc=='pokepast.es')
         url=wait2.content
-        await ctx.send(url)
+        async with aiohttp.ClientSession().get(url) as resp:
+          print(resp)
         
         
 def setup(bot):
