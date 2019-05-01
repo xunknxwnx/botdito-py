@@ -1,7 +1,7 @@
-import discord, aiohttp
+import discord, aiohttp, json
 from discord.ext import commands
 from urllib.parse import urlparse
-from io import BytesIO
+from ast import literal_eval
 
 class Requests(commands.Cog, name='Requests'):
   def __init__(self,bot):
@@ -147,11 +147,9 @@ class Requests(commands.Cog, name='Requests'):
         async with aiohttp.ClientSession() as session:
           async with session.get(url+'/json') as resp:
             thing=await resp.read()
-            thing=thing.decode('utf-8').replace("'",'"')[1:-1]
-            print(thing[0]['paste'])
+            thing=literal_eval(thing.decode('utf-8'))
+            s = json.dumps(thing, indent=2, sort_keys=True)
+            print(s)
             
-            
-        
-        
 def setup(bot):
   bot.add_cog(Requests(bot))
