@@ -9,6 +9,13 @@ class Requests(commands.Cog, name='Requests'):
   def chunk(self,l,size):
     for i in range(0,len(l),size):
       yield l[i:i+size]
+   
+  def pokemon_counter(self,team,string):
+    count=0
+    thing=team.split("\r\n\r\n")
+    for i in thing:
+      count+=1
+    return count
     
   @commands.group(name="friendcode",aliases=['fc'])
   async def fc(self,ctx):
