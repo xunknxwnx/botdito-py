@@ -141,8 +141,9 @@ class Requests(commands.Cog, name='Requests'):
       method=wait1.content.lower()
       if method=='a':
         await ctx.author.send("Okay, please send a Pokepaste link!")
-        wait2=await self.bot.wait_for('message', lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and bool(urlparse(message.content).netloc) and urlparse(message.content).netloc=='pokepast.es')
+        wait2=await self.bot.wait_for('message', lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and urlparse(message.content).netloc=='pokepast.es')
         url=wait2.content
+        await ctx.send(url)
         
  
 def setup(bot):
