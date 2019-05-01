@@ -144,8 +144,9 @@ class Requests(commands.Cog, name='Requests'):
         wait2=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel and urlparse(message.content).netloc=='pokepast.es')
         url=wait2.content
         async with aiohttp.ClientSession() as session:
-          async with session.get(url) as resp:
-            print(await resp.read())
+          async with session.get(url+'/json') as resp:
+            thing=await resp.read()
+            
         
         
 def setup(bot):
