@@ -44,6 +44,9 @@ class Requests(commands.Cog, name='Requests'):
       consolea=console
     await self.bot.db.execute(f"UPDATE people SET {consolea.lower()}='{fc}' WHERE user_id={ctx.author.id}")
     await ctx.send("Set your fc! Now you can request Pokemon!")
+    role=discord.utils.get(ctx.guild.roles,name='SnowBuddy')
+    if role not in ctx.author.roles:
+      await ctx.author.add_roles(role)
     
   @fc.command()
   async def view(self,ctx,console=None,user:discord.User=None):
