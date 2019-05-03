@@ -128,7 +128,7 @@ class Requests(commands.Cog, name='Requests'):
         return True if m.author==ctx.author and m.channel==ctx.channel else False
       wait=await self.bot.wait_for('message', check=check)
       num=int(wait.content)
-      await ctx.send(final[num-1])
+      await ctx.send(list(final)[num-1])
       await self.bot.db.release(db)
       
   @commands.group(name='request')
