@@ -183,12 +183,11 @@ class Requests(commands.Cog, name='Requests'):
         await ctx.author.send("What is your in game name? This is so the genners can find you quickly and easy.")
         wait3=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel)
         ign=wait3.content
-        msg=await channel.send(f"{ign} ({ctx.author.mention}) has submitted the following team!\n```{''.join(team)}```")
+        msg=await channel.send(f"{ign} ({ctx.author.mention}) has submitted the following team!\n```{'\n'.join(team)}```")
         await db.execute(f"UPDATE requests SET requests=requests || {team},ongoing=ongoing || {team} WHERE user_id={ctx.author.id}")
         await db.execute(f"INSERT INTO ongoing(message, status, requester) VALUES({msg.id}, ''NOT DONE'', {ctx.author.id})")
       elif method=='c':
-        await ctx.author.send("NOT SUPPORTED")
-        goto .start
+        return await ctx.author.send("NOT SUPPORTED")
                                
                                
 def setup(bot):
