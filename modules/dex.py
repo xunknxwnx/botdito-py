@@ -142,6 +142,11 @@ class Dex(commands.Cog, name="Dex"):
       mega=True
     for k,v in jsona['ev_yield'].items():
       yields+=f"{stat_names[k]} - {v}\n"
+    variations=""
+    if jsona['variations']:
+      var=jsona['variations']
+      for i in var:
+        variations+=f"{i['names']['en']} - Can be achieved by meeting the following condition: {i['condition']}. Types are: {', '.join(i['types']}\n"
     #if mega is not true
     if not mega:
       hid={True: '[Hidden]', False: ''}
@@ -264,6 +269,9 @@ Evolutions:
 
 Evolves From:
 {evolution_from}
+
+Variations:
+{variations}
 
 
 {entry}
