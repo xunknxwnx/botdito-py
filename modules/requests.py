@@ -115,15 +115,14 @@ class Requests(commands.Cog, name='Requests'):
         if friendcode[consolea.lower()]:
           people.append(i)
       final=self.chunk(people, 25)
-      await ctx.send(final)
+      await ctx.send(list(final))
       text=""
       index=1
       for i in final:
         text+=f"{index} - {i.name}\n"
         index+=1
       embed=discord.Embed(description=text, colour=discord.Colour.blue())
-      msg=await ctx.send(embed=embed)
-      await ctx.send("Please select a user by saying a number.")
+      await ctx.send("Please select a user by saying a number.",embed=embed)
       def check(m):
         return True if m.author==ctx.author and m.channel==ctx.channel else False
       wait=await self.bot.wait_for('message', check=check)
@@ -170,9 +169,11 @@ class Requests(commands.Cog, name='Requests'):
               await ctx.author.send("What is your in game name? This is so the genners can find you quickly and easy.")
               wait4=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel)
               ign=wait4.content
+              haha='\n'
               msg=await channel.send(f"{ign} ({ctx.author.mention}) has submitted the following team!\n```{team2}```")
-              await db.execute(f"UPDATE requests SET requests=requests || {team},ongoing=ongoing || {team} WHERE user_id={ctx.author.id}")
-              await db.execute(f"INSERT INTO ongoing(message, status, requester) VALUES({msg.id}, ''NOT DONE'', {ctx.author.id})")
+              for i in team:
+                await db.execute(f"UPDATE requests SET requests=requests || ARRAY ['{i}'],ongoing=ongoing || ARRAY['{i}'] WHERE user_id={ctx.author.id}")
+              await db.execute(f"INSERT INTO ongoing(message, status, team, requester) VALUES({msg.id}, 'NOT DONE', '{team2}', {ctx.author.id})")
             session.close()
       elif method=='b':
         await ctx.author.send("Okay! Please send a valid Pokemon Showdown team.")
@@ -183,12 +184,22 @@ class Requests(commands.Cog, name='Requests'):
         await ctx.author.send("What is your in game name? This is so the genners can find you quickly and easy.")
         wait3=await self.bot.wait_for('message', check=lambda message: message.author==ctx.author and message.channel==ctx.author.dm_channel)
         ign=wait3.content
-        msg=await channel.send(f"{ign} ({ctx.author.mention}) has submitted the following team!\n```{'\n'.join(team)}```")
-        await db.execute(f"UPDATE requests SET requests=requests || {team},ongoing=ongoing || {team} WHERE user_id={ctx.author.id}")
-        await db.execute(f"INSERT INTO ongoing(message, status, requester) VALUES({msg.id}, ''NOT DONE'', {ctx.author.id})")
+        haha='\n'
+        msg=await channel.send(f"{ign} ({ctx.author.mention}) has submitted the following team!\n```{haha.join(team)}```")
+        for i in team:
+          await db.execute(f"UPDATE requests SET requests=requests || ARRAY ['{i}'],ongoing=ongoing || ARRAY['{i}'] WHERE user_id={ctx.author.id}")
+        await db.execute(f"INSERT INTO ongoing(message, status, team, requester) VALUES({msg.id}, 'NOT DONE', '{haha.join(team)}', {ctx.author.id})")
       elif method=='c':
-        return await ctx.author.send("NOT SUPPORTED")
+        return await ctx.author.send("NOT SUPPORTED YET")
+      await self.db.release(db)
                                
-                               
+  @commands.command(name='myreqs', aliases=['myrequests','reqs']]
+  async def myreqs(self,ctx, number:int=None):
+    async with self.bot.db.acquire() as db:
+      reqs=await db.fetch(f"SELECT * FROM ongoing WHERE requester={ctx.author.id}")
+      if not reqs:
+        return await ctx.send("You have no requests!")
+      return await ctx.send("Not currently ready!")
+
 def setup(bot):
   bot.add_cog(Requests(bot))
