@@ -114,8 +114,8 @@ class Requests(commands.Cog, name='Requests'):
         friendcode=await db.fetchrow(f"SELECT {consolea.lower()} FROM people WHERE user_id={i.id}")
         if friendcode[consolea.lower()]:
           people.append(i)
-      final=self.chunk(people, 25)
-      await ctx.send(list(final))
+      final=list(self.chunk(people, 25))
+      await ctx.send(final)
       text=""
       index=1
       for i in final:
