@@ -94,6 +94,8 @@ class Dex(commands.Cog, name="Dex"):
     pk=pokemon.split()
     pkmn='_'.join(pk)
     pkmngif='-'.join(pk)
+    if pkmn="melmetal":
+      pkmn="meltmetal"
     pokedex=requests.get(f"https://raw.githubusercontent.com/jalyna/oakdex-pokedex/master/data/pokemon/{pkmn.lower()}.json")
     jsona=pokedex.json()
     if not pokedex:
