@@ -41,7 +41,9 @@ games=[
   "Sun",
   "Moon",
   "Ultra Sun",
-  "Ultra Moon"
+  "Ultra Moon",
+  "Let's Go Pikachu",
+  "Let's Go Eevee"
 ]
 
 class Dex(commands.Cog, name="Dex"):
